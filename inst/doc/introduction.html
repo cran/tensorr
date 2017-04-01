@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Robert Zamora" />
+
+<meta name="date" content="2017-04-01" />
+
+<title>Introduction to tensorr</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction to tensorr</h1>
+<h4 class="author"><em>Robert Zamora</em></h4>
+<h4 class="date"><em>2017-04-01</em></h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#tensor-classes">Tensor Classes</a><ul>
+<li><a href="#sparse-tensors">Sparse Tensors</a></li>
+<li><a href="#dense-tensors">Dense Tensors</a></li>
+<li><a href="#unfolded-tensors">Unfolded Tensors</a></li>
+<li><a href="#converting-between-classes">Converting Between Classes</a></li>
+</ul></li>
+<li><a href="#extracting-and-replacing">Extracting and Replacing</a><ul>
+<li><a href="#standard-indexing">Standard Indexing</a></li>
+<li><a href="#linear-indexing">Linear Indexing</a></li>
+<li><a href="#listmatrix-indexing">List/Matrix Indexing</a></li>
+</ul></li>
+<li><a href="#group-generics">Group Generics</a><ul>
+<li><a href="#arithmetic">Arithmetic</a></li>
+<li><a href="#comparisons-and-logic">Comparisons and Logic</a></li>
+<li><a href="#math">Math</a></li>
+<li><a href="#summary">Summary</a></li>
+</ul></li>
+<li><a href="#unfolding">Unfolding</a></li>
+<li><a href="#tensor-multiplication">Tensor Multiplication</a><ul>
+<li><a href="#tensor-times-matrix">Tensor Times Matrix</a></li>
+<li><a href="#tensor-times-vector">Tensor Times Vector</a></li>
+<li><a href="#tensor-times-tensor-outer-product">Tensor Times Tensor (Outer Product)</a></li>
+<li><a href="#norm-and-inner-product">Norm and Inner Product</a></li>
+</ul></li>
+<li><a href="#future-work">Future Work</a></li>
+<li><a href="#references">References</a></li>
+</ul>
+</div>
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p><strong>tensorr</strong> provides methods to manipulate and store sparse tensors. Tensors are multidimensional generalizations of matrices (two dimensional) and vectors (one dimensional).</p>
+<p>It has three main goals:</p>
+<ul>
+<li>Provide an efficient format to store sparse tensors in R.</li>
+<li>Provide standard tensor operations such as multiplication and unfolding.</li>
+<li>Provide standard tensor decomposition techniques such as CP and Tucker.</li>
+</ul>
+<p>The aim of this vignette is not to provide a mathematical overview of Tensors, please see Kolda and Bader (2009) instead. It assumes that you have some working knowledge of tensors and want to know how to use them in R.</p>
+<p>Let’s start with a simple motivating example for sparse tensor usage. Say we have a three-dimensional 2x2x2 tensor with non-zero values in the first and fifth positions (remember R arrays/matrices are column oriented). We could represent this object with a standard R array:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dims &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>)
+z &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="kw">c</span>(<span class="dv">10</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">20</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>), dims)
+z</code></pre></div>
+<pre><code>## , , 1
+## 
+##      [,1] [,2]
+## [1,]   10    0
+## [2,]    0    0
+## 
+## , , 2
+## 
+##      [,1] [,2]
+## [1,]   20    0
+## [2,]    0    0</code></pre>
+<p>But since many of the values are zero, it makes more sense to only store this as a sparse tensor. Let’s create this object by providing the indices (subscripts) of the non-zero values.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tensorr)
+
+subs &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>))
+vals &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">20</span>)
+dims &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>)
+x &lt;-<span class="st"> </span><span class="kw">sptensor</span>(subs, vals, dims)
+x</code></pre></div>
+<pre><code>## &lt;A 2x2x2 sparse tensor with 2 non-zero entries&gt;
+## subs: &lt;1,1,1&gt; &lt;1,1,2&gt;
+## vals: 10 20</code></pre>
+<p>For this small example, the benefit from using a sparse tensor is not apparent (and in fact the sparse object is larger than the dense one if you check <code>object.size</code>), but for larger tensors this advantage will prove useful.</p>
+<p>We’ll go over the different kinds of operations you can perform below, but for now feel free to try a few out:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># element-wise math operations</span>
+x +<span class="st"> </span>x
+<span class="dv">2</span> *<span class="st"> </span>x
+x *<span class="st"> </span>x
+<span class="kw">max</span>(x)
+
+<span class="co"># extracting </span>
+x[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>]
+x[<span class="dv">1</span>:<span class="dv">4</span>]
+x[<span class="kw">list</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>), <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>))]
+
+<span class="co"># replacing</span>
+x[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>] &lt;-<span class="st"> </span><span class="dv">30</span>
+
+<span class="co"># converting</span>
+<span class="kw">as_dtensor</span>(x)
+
+<span class="co"># tensor multiplication</span>
+m &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">1</span>:<span class="dv">6</span>, <span class="dt">nrow =</span> <span class="dv">3</span>, <span class="dt">ncol =</span> <span class="dv">2</span>)
+<span class="kw">ttm</span>(x, m, <span class="dv">2</span>)
+
+<span class="co"># unfolding</span>
+<span class="kw">unfold</span>(x, <span class="dv">1</span>)</code></pre></div>
+</div>
+<div id="tensor-classes" class="section level2">
+<h2>Tensor Classes</h2>
+<p>The <strong>tensorr</strong> package provides S4 classes for sparse and dense tensor representations. The <code>sptensor</code> class is a new sparse tensor class, with non-zero values and subscripts stored in <a href="https://en.wikipedia.org/wiki/Sparse_matrix#Coordinate_list_.28COO.29">coordinate list format</a> (coo) to reduce storage requirements (Note the <strong>Matrix</strong> package refers to this as <em>triplet format</em>, and its corresponding class is <code>TsparseMatrix</code>). The <code>dtensor</code> class is a wrapper around R’s existing dense multidimensional array, but adds functionality for tensor operations such as multiplication and unfolding.</p>
+<div id="sparse-tensors" class="section level3">
+<h3>Sparse Tensors</h3>
+<p>A sparse tensor can be created with a list or matrix of subscripts, a numeric vector of non-zero values, and an integer vector of dimensions. Here’s a summary of the basic commands needed to create sparse tensors.</p>
+<p>Let’s create a 2x2x2 <code>sptensor</code> with non-zero values in the first and fifth positions. You can create one with a list of subscripts.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">subs &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>))
+vals &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">20</span>)
+dims &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>)
+x &lt;-<span class="st"> </span><span class="kw">sptensor</span>(subs, vals, dims)</code></pre></div>
+<p>Or, alternatively, you can provide a matrix of subscripts. Note that the subscripts are represented as a matrix where the ith row corresponds to the ith dimension and the jth column is the subscript to the jth non-zero value.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">subs &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>, <span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">nrow =</span> <span class="kw">length</span>(dims))
+x &lt;-<span class="st"> </span><span class="kw">sptensor</span>(subs, vals, dims)</code></pre></div>
+<p>The constructor components are stored as slots in the object and can be accessed via slots (<code>x@subs</code>, <code>x@vals</code>, <code>x@dims</code>) or the preferred accessor functions.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># subscripts for non-zero values</span>
+<span class="kw">nzsubs</span>(x)</code></pre></div>
+<pre><code>##      [,1] [,2]
+## [1,]    1    1
+## [2,]    1    1
+## [3,]    1    2</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># non-zero values</span>
+<span class="kw">nzvals</span>(x)</code></pre></div>
+<pre><code>## [1] 10 20</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># dimensions</span>
+<span class="kw">dim</span>(x)</code></pre></div>
+<pre><code>## [1] 2 2 2</code></pre>
+<p>See <code>methods(class = &quot;sptensor&quot;)</code> for a full list of operations associated with this class.</p>
+</div>
+<div id="dense-tensors" class="section level3">
+<h3>Dense Tensors</h3>
+<p>Dense tensors can be created by simply providing an existing multidimensional array to the constructor. You can access the non-zero subscripts, non-zero values, and dimensions the same way you would for a sparse tensor.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dims &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>)
+arr &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="kw">c</span>(<span class="dv">10</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">20</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>), dims)
+z &lt;-<span class="st"> </span><span class="kw">dtensor</span>(arr)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">nzsubs</span>(z)</code></pre></div>
+<pre><code>##      [,1] [,2]
+## [1,]    1    1
+## [2,]    1    1
+## [3,]    1    2</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">nzvals</span>(z)</code></pre></div>
+<pre><code>## [1] 10 20</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(z)</code></pre></div>
+<pre><code>## [1] 2 2 2</code></pre>
+<p>See <code>methods(class = &quot;dtensor&quot;)</code> for a full list of operations associated with this class.</p>
+</div>
+<div id="unfolded-tensors" class="section level3">
+<h3>Unfolded Tensors</h3>
+<p>You can also directly create <code>unfolded-sptensor</code> and <code>unfolded-dtensor</code> classes, though most likely you will only interact with these objects after <code>unfold</code>-ing an existing tensor. The unfolding operation is discussed more in depth in a later section. The complement to unfolding is <code>refold</code>-ing. Here’s an example of unfolding our tensor along the first dimension and then refolding it back.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">unfold</span>(x, <span class="dv">1</span>)</code></pre></div>
+<pre><code>## &lt;A 2x2x2 unfolded sparse tensor along mode 1 &gt;
+## 2 x 4 sparse Matrix of class &quot;dgTMatrix&quot;
+##               
+## [1,] 10 . 20 .
+## [2,]  . .  . .</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">refold</span>(<span class="kw">unfold</span>(x,<span class="dv">1</span>))</code></pre></div>
+<pre><code>## &lt;A 2x2x2 sparse tensor with 2 non-zero entries&gt;
+## subs: &lt;1,1,1&gt; &lt;1,1,2&gt;
+## vals: 10 20</code></pre>
+</div>
+<div id="converting-between-classes" class="section level3">
+<h3>Converting Between Classes</h3>
+<p>You can easily convert between sparse and dense tensor representations.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># convert dense tensor to sparse</span>
+<span class="kw">as_sptensor</span>(z)</code></pre></div>
+<pre><code>## &lt;A 2x2x2 sparse tensor with 2 non-zero entries&gt;
+## subs: &lt;1,1,1&gt; &lt;1,1,2&gt;
+## vals: 10 20</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># convert sparse tensor to dense</span>
+<span class="kw">as_dtensor</span>(x)</code></pre></div>
+<pre><code>## &lt;A 2x2x2 dense tensor&gt;
+## , , 1
+## 
+##      [,1] [,2]
+## [1,]   10    0
+## [2,]    0    0
+## 
+## , , 2
+## 
+##      [,1] [,2]
+## [1,]   20    0
+## [2,]    0    0</code></pre>
+<p>You can also turn a data frame of indices into a sparse tensor. Each column in the data frame corresponds to a specific dimension. The last column in the data frame is assumed to contain the value, unless otherwise specified.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">i =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>), <span class="dt">j =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>), <span class="dt">k =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">val =</span> <span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">20</span>))
+df</code></pre></div>
+<pre><code>##   i j k val
+## 1 1 1 1  10
+## 2 1 1 2  20</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">as_sptensor</span>(df, <span class="dt">dims =</span> dims)</code></pre></div>
+<pre><code>## &lt;A 2x2x2 sparse tensor with 2 non-zero entries&gt;
+## subs: &lt;1,1,1&gt; &lt;1,1,2&gt;
+## vals: 10 20</code></pre>
+</div>
+</div>
+<div id="extracting-and-replacing" class="section level2">
+<h2>Extracting and Replacing</h2>
+<p>The extraction <code>[</code> and replacement <code>[&lt;-</code> functions work exactly as they would for multidimensional arrays, with one addition - they can also accept a list or matrix of subscripts. This feature was added to aid in programming workflows (as opposed to interactive usage).</p>
+<p>If you have a high dimensional array it can be cumbersome to write all the subscript for each dimension, e.g. <code>x[1,2,4,5,1,1,1,21,100]</code>, and it is more likely that you will make mistakes. But if you are able to programmatically generate these subscripts then you can simply pass a list/matrix instead.</p>
+<div id="standard-indexing" class="section level3">
+<h3>Standard Indexing</h3>
+<p>If the dimensions of your tensor aren’t too high, you can take advantage of standard indexing the way you would with any matrix or array in R. This format takes a comma-separated list of arguments (since <code>[</code> and <code>[&lt;-</code> are actually functions)</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>]</code></pre></div>
+<pre><code>## [1] 10</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>]</code></pre></div>
+<pre><code>## [1] 0</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>] &lt;-<span class="st"> </span><span class="dv">100</span>
+x[<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>] &lt;-<span class="st"> </span><span class="dv">200</span>
+x</code></pre></div>
+<pre><code>## &lt;A 2x2x2 sparse tensor with 3 non-zero entries&gt;
+## subs: &lt;1,1,1&gt; &lt;1,1,2&gt; &lt;2,2,2&gt;
+## vals: 100 20 200</code></pre>
+<p>You can also pass ranges or leave out arguments where you want to extract or replace all the values in that dimension.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x[<span class="dv">1</span>,,]</code></pre></div>
+<pre><code>## &lt;A 1x2x2 sparse tensor with 2 non-zero entries&gt;
+## subs: &lt;1,1,1&gt; &lt;1,1,2&gt;
+## vals: 100 20</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x[<span class="dv">1</span>,<span class="dv">1</span>:<span class="dv">2</span>,<span class="dv">1</span>:<span class="dv">2</span>]</code></pre></div>
+<pre><code>## &lt;A 1x2x2 sparse tensor with 2 non-zero entries&gt;
+## subs: &lt;1,1,1&gt; &lt;1,1,2&gt;
+## vals: 100 20</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x[<span class="dv">1</span>,,,drop=<span class="ot">TRUE</span>]</code></pre></div>
+<pre><code>## &lt;A 2x2 sparse tensor with 2 non-zero entries&gt;
+## subs: &lt;1,1&gt; &lt;1,2&gt;
+## vals: 100 20</code></pre>
+</div>
+<div id="linear-indexing" class="section level3">
+<h3>Linear Indexing</h3>
+<p>You can also index the tensor by treating it as a single vector of values. Note that R indexes values in column-wise fashion, which means that the first index changes the fastest and the last index changes the slowest as you traverse the array. For example, these would be the indices of a 2x2x2 multidimensional array.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">array</span>(<span class="dv">1</span>:<span class="dv">8</span>, <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>))</code></pre></div>
+<pre><code>## , , 1
+## 
+##      [,1] [,2]
+## [1,]    1    3
+## [2,]    2    4
+## 
+## , , 2
+## 
+##      [,1] [,2]
+## [1,]    5    7
+## [2,]    6    8</code></pre>
+<p>Using this pattern, we can extract or replace tensor values by passing a single vector of numeric values with each value corresponding to a linear index.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># get the first three values</span>
+x[<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>)]</code></pre></div>
+<pre><code>## [1] 100   0   0</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># alternatively</span>
+x[<span class="dv">1</span>:<span class="dv">3</span>]</code></pre></div>
+<pre><code>## [1] 100   0   0</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># replace the first and fifth values</span>
+x[<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">5</span>)] &lt;-<span class="st"> </span><span class="kw">c</span>(-<span class="dv">10</span>, -<span class="dv">20</span>)
+x</code></pre></div>
+<pre><code>## &lt;A 2x2x2 sparse tensor with 3 non-zero entries&gt;
+## subs: &lt;1,1,1&gt; &lt;1,1,2&gt; &lt;2,2,2&gt;
+## vals: -10 -20 200</code></pre>
+</div>
+<div id="listmatrix-indexing" class="section level3">
+<h3>List/Matrix Indexing</h3>
+<p>The final way to extract or replace values from a tensor is use a list/matrix of subscripts (similarly to how you would construct an <code>sptensor</code>). As stated above, this can be useful if you have a high dimensional tensor and have a way to programmatically produce indices. In the example below we’ll create the list manually.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">subs &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">1</span>), <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>))
+x[subs]</code></pre></div>
+<pre><code>## [1] -10   0 -20</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x[subs] &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">50</span>, <span class="dv">60</span>, <span class="dv">70</span>)
+x</code></pre></div>
+<pre><code>## &lt;A 2x2x2 sparse tensor with 4 non-zero entries&gt;
+## subs: &lt;1,1,1&gt; &lt;1,2,1&gt; &lt;1,1,2&gt; &lt;2,2,2&gt;
+## vals: 50 60 70 200</code></pre>
+</div>
+</div>
+<div id="group-generics" class="section level2">
+<h2>Group Generics</h2>
+<p>A number of group generics are also defined for tensors (if you’re unfamiliar with group generics, see <code>?S4GroupGeneric</code>), including</p>
+<ul>
+<li>Arithmetic (<code>+</code>, <code>-</code> , <code>*</code>, …)</li>
+<li>Comparisons (<code>==</code>, <code>&gt;</code>, <code>!=</code>, …)</li>
+<li>Logic (<code>&amp;</code>, <code>|</code>)</li>
+<li>Math (<code>abs</code>, <code>sqrt</code>, ..)</li>
+<li>Summary (<code>max</code>, <code>min</code>, <code>sum</code>, …)</li>
+</ul>
+<p>We we’ll go over a few examples for each group, but not every one. Feel free to experiment on your own! For these examples we’ll use our sparse tensor <code>x</code>, which currently has values:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x</code></pre></div>
+<pre><code>## &lt;A 2x2x2 sparse tensor with 4 non-zero entries&gt;
+## subs: &lt;1,1,1&gt; &lt;1,2,1&gt; &lt;1,1,2&gt; &lt;2,2,2&gt;
+## vals: 50 60 70 200</code></pre>
+<p>Note that these operations will throw a warning if the operation converts zero values to non-zero values since this will likely cause the sparse tensor to become extremely dense.</p>
+<div id="arithmetic" class="section level3">
+<h3>Arithmetic</h3>
+<p>These are element-wise operations. To perform tensor operations see the section on Tensor Multiplication.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x +<span class="st"> </span>x</code></pre></div>
+<pre><code>## &lt;A 2x2x2 sparse tensor with 4 non-zero entries&gt;
+## subs: &lt;1,1,1&gt; &lt;1,2,1&gt; &lt;1,1,2&gt; &lt;2,2,2&gt;
+## vals: 100 120 140 400</code></pre>
+<p>Note that if an operation results in all the values equal to zero, then the tensor will return empty subscripts and values.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x -<span class="st"> </span>x</code></pre></div>
+<pre><code>## &lt;A 2x2x2 sparse tensor with 0 non-zero entries&gt;
+## subs: &lt;empty&gt;
+## vals: &lt;empty</code></pre>
+</div>
+<div id="comparisons-and-logic" class="section level3">
+<h3>Comparisons and Logic</h3>
+<p>These operations are also element-wise, returning a tensor with logical values.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &gt;<span class="st"> </span><span class="dv">100</span></code></pre></div>
+<pre><code>## &lt;A 2x2x2 sparse tensor with 1 non-zero entries&gt;
+## subs: &lt;2,2,2&gt;
+## vals: TRUE</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &gt;<span class="st"> </span><span class="dv">2</span>*x</code></pre></div>
+<pre><code>## &lt;A 2x2x2 sparse tensor with 0 non-zero entries&gt;
+## subs: &lt;empty&gt;
+## vals: &lt;empty</code></pre>
+<p>Note the warning when returning a tensor that is mostly TRUE values.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x ==<span class="st"> </span>x</code></pre></div>
+<pre><code>## Warning in x == x: Operation converts zero values to non-zero values.
+## Tensor is likely dense now</code></pre>
+<pre><code>## &lt;A 2x2x2 sparse tensor with 8 non-zero entries&gt;
+## subs: &lt;1,1,1&gt; &lt;2,1,1&gt; &lt;1,2,1&gt; &lt;2,2,1&gt; &lt;1,1,2&gt; ...
+## vals: TRUE TRUE TRUE TRUE TRUE ...</code></pre>
+</div>
+<div id="math" class="section level3">
+<h3>Math</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sqrt</span>(x)</code></pre></div>
+<pre><code>## &lt;A 2x2x2 sparse tensor with 4 non-zero entries&gt;
+## subs: &lt;1,1,1&gt; &lt;1,2,1&gt; &lt;1,1,2&gt; &lt;2,2,2&gt;
+## vals: 7.071068 7.745967 8.3666 14.14214</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">log1p</span>(x)</code></pre></div>
+<pre><code>## &lt;A 2x2x2 sparse tensor with 4 non-zero entries&gt;
+## subs: &lt;1,1,1&gt; &lt;1,2,1&gt; &lt;1,1,2&gt; &lt;2,2,2&gt;
+## vals: 3.931826 4.110874 4.26268 5.303305</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">abs</span>(x)</code></pre></div>
+<pre><code>## &lt;A 2x2x2 sparse tensor with 4 non-zero entries&gt;
+## subs: &lt;1,1,1&gt; &lt;1,2,1&gt; &lt;1,1,2&gt; &lt;2,2,2&gt;
+## vals: 50 60 70 200</code></pre>
+<p>Again, we’ll get a warning if we apply a function that converts zero values to non-zero values.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">log</span>(x)</code></pre></div>
+<pre><code>## Warning in log(x): Operation converts zero values to non-zero values.
+## Tensor is likely dense now</code></pre>
+<pre><code>## &lt;A 2x2x2 sparse tensor with 8 non-zero entries&gt;
+## subs: &lt;1,1,1&gt; &lt;2,1,1&gt; &lt;1,2,1&gt; &lt;2,2,1&gt; &lt;1,1,2&gt; ...
+## vals: 3.91202300542815 -Inf 4.0943445622221 -Inf 4.24849524204936 ...</code></pre>
+</div>
+<div id="summary" class="section level3">
+<h3>Summary</h3>
+<p>Note that any time we apply <code>min</code> or <code>range</code> to a tensor we’ll get 0 if there are any zero values in the tensor. If you just want the <code>min</code> or <code>range</code> of non-zero values call these functions on the result of <code>nzvals</code></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">max</span>(x)</code></pre></div>
+<pre><code>## [1] 200</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">range</span>(x)</code></pre></div>
+<pre><code>## [1]   0 200</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">range</span>(<span class="kw">nzvals</span>(x))</code></pre></div>
+<pre><code>## [1]  50 200</code></pre>
+</div>
+</div>
+<div id="unfolding" class="section level2">
+<h2>Unfolding</h2>
+<p>Unfolding, or <em>matricizing</em>, re-orders the fibers of tensor to be columns in a matrix. A fiber is analogous to a row or column in a 2D matrix in that they are obtained by holding every dimension constant except for one. For example, the mode-1 fibers of our sparse tensor <code>x</code> are <code>x[,1,1]</code>, <code>x[,2,1]</code>, <code>x[,1,2]</code>, and <code>x[,2,2]</code>. The <code>unfold</code> function takes a tensor, finds the fibers, and makes them the columns in a new matrix.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">u &lt;-<span class="st"> </span><span class="kw">unfold</span>(x,<span class="dv">1</span>)
+u</code></pre></div>
+<pre><code>## &lt;A 2x2x2 unfolded sparse tensor along mode 1 &gt;
+## 2 x 4 sparse Matrix of class &quot;dgTMatrix&quot;
+##                  
+## [1,] 50 60 70   .
+## [2,]  .  .  . 200</code></pre>
+<p>Unfolding is important because many tensor operations can be expressed as operations on unfolded tensors, so we can take advantage of existing tools and methods for working with matrices. For example, the n-mode product of a tensor and a matrix can be written as the matrix product of the unfolded tensor and the matrix. See <a href="#tensor-multiplication">Tensor Multiplication</a> and Kolda and Bader (2009) for more info.</p>
+<p>Of course, each unfolded tensor can be easily refolded to its original state.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">refold</span>(u)</code></pre></div>
+<pre><code>## &lt;A 2x2x2 sparse tensor with 4 non-zero entries&gt;
+## subs: &lt;1,1,1&gt; &lt;1,2,1&gt; &lt;1,1,2&gt; &lt;2,2,2&gt;
+## vals: 50 60 70 200</code></pre>
+</div>
+<div id="tensor-multiplication" class="section level2">
+<h2>Tensor Multiplication</h2>
+<p>Tensor multiplication is analogous to matrix multiplication, but is a little more complex due to the number of dimensions.</p>
+<div id="tensor-times-matrix" class="section level3">
+<h3>Tensor Times Matrix</h3>
+<p>Currently, this package only implements the <em>n-mode product</em>. This product keeps all tensor indices constant except for the nth, and sums the product of these values with a matrix of size <span class="math inline">\(j \times i_n\)</span>. If we have a tensor <span class="math inline">\(\mathbf{X}\)</span> and a matrix <span class="math inline">\(U\)</span>, then we can write this product down as (per Kolda (2009)):</p>
+<p><span class="math display">\[(\mathbf{X} \times_n U)_{i_1i_2...i_{n-1} j i_{n+1}...i_N} = \sum_{i_n = 1}^{I_n}{x_{i_1i_2...i_N}u_{ji_n}}\]</span> However, as stated previously, this operation can also be expressed by unfolding the sparse tensor:</p>
+<p><span class="math display">\[\mathbf{Y} = \mathbf{X} \times_n U \Leftrightarrow Y_{(n)} = UX_{(n)}\]</span> where <span class="math inline">\(Y_{(n)}\)</span> and <span class="math inline">\(X_{(n)}\)</span> represent unfolded tensors along the nth dimension. This product can be executed using <code>ttm</code>. For example, we can multiply our sparse tensor along the 2nd mode. Notice how dimensions of the resulting tensor change in the 2nd dimension.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">1</span>:<span class="dv">6</span>, <span class="dt">nrow =</span> <span class="dv">3</span>, <span class="dt">ncol =</span> <span class="dv">2</span>)
+<span class="kw">ttm</span>(x, m, <span class="dv">2</span>)</code></pre></div>
+<pre><code>## &lt;A 2x3x2 sparse tensor with 9 non-zero entries&gt;
+## subs: &lt;1,1,1&gt; &lt;1,2,1&gt; &lt;1,3,1&gt; &lt;1,1,2&gt; &lt;2,1,2&gt; ...
+## vals: 290 400 510 70 800 ...</code></pre>
+</div>
+<div id="tensor-times-vector" class="section level3">
+<h3>Tensor Times Vector</h3>
+<p>Using <code>ttv</code> to multiply a tensor times a vector is equivalent to using <code>ttm</code> to multiply by a matrix with a single column except that the nth dimension of size one will be dropped automatically. So the result of <code>ttv</code> is a tensor with one less dimension.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">v &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="dv">3</span>
+<span class="kw">ttv</span>(x,<span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">4</span>),<span class="dv">2</span>)</code></pre></div>
+<pre><code>## &lt;A 2x2 sparse tensor with 3 non-zero entries&gt;
+## subs: &lt;1,1&gt; &lt;1,2&gt; &lt;2,2&gt;
+## vals: 390 210 800</code></pre>
+</div>
+<div id="tensor-times-tensor-outer-product" class="section level3">
+<h3>Tensor Times Tensor (Outer Product)</h3>
+<p>The outer product of two tensors results in a tensor with dimension c(dim(x),dim(y)). This is essentially a sparse implementation of the <code>outer</code> function in the base package. The function <code>ttt</code> is an alias for <code>outerprod</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">outerprod</span>(x,x)</code></pre></div>
+<pre><code>## &lt;A 2x2x2x2x2x2 sparse tensor with 16 non-zero entries&gt;
+## subs: &lt;1,1,1,1,1,1&gt; &lt;1,2,1,1,1,1&gt; &lt;1,1,2,1,1,1&gt; &lt;2,2,2,1,1,1&gt; &lt;1,1,1,1,2,1&gt; ...
+## vals: 2500 3000 3500 10000 3000 ...</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">identical</span>(<span class="kw">ttt</span>(x,x), <span class="kw">outerprod</span>(x,x))</code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+</div>
+<div id="norm-and-inner-product" class="section level3">
+<h3>Norm and Inner Product</h3>
+<p>You can also calculate the Frobenius norm of a tensor and the inner product between two tensors.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">norm</span>(x)</code></pre></div>
+<pre><code>## [1] 225.8318</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sqrt</span>(<span class="kw">innerprod</span>(x,x))</code></pre></div>
+<pre><code>## [1] 225.8318</code></pre>
+</div>
+</div>
+<div id="future-work" class="section level2">
+<h2>Future Work</h2>
+<p>I plan to add common tensor decompositions, such as CP and Tucker, to the <strong>tensorr</strong> package in the near future. Any other requests and suggestions are welcome.</p>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+<p>Many of the dense and sparse implementation ideas were adapted from:</p>
+<ul>
+<li>B. W. Bader and T. G. Kolda. Algorithm 862: MATLAB tensor classes for fast algorithm prototyping, ACM Transactions on Mathematical Software 32(4):635-653, December 2006.</li>
+<li>B. W. Bader and T. G. Kolda. Efficient MATLAB computations with sparse and factored tensors, SIAM Journal on Scientific Computing 30(1):205-231, December 2007.</li>
+<li><a href="https://github.com/mnick/scikit-tensor">scikit-tensor</a></li>
+</ul>
+<p>For a review on tensors, see:</p>
+<ul>
+<li>T. G. Kolda and B. W. Bader, Tensor Decompositions and Applications, SIAM Review 51(3):455-500, September 2009</li>
+</ul>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
