@@ -14,13 +14,18 @@ setMethod("as_sptensor", "dtensor", function(x) {
   nonzero_subs <- nzsubs(x)
   nonzero_vals <- nzvals(x)
 
-  sptensor(nonzero_subs, nonzero_vals, dims)
+  # build sptensor
+  res <- sptensor(nonzero_subs, nonzero_vals, dims)
+
+  # add dimnames
+  dimnames(res) <- dimnames(x)
+  res
 })
 
 # from data frame
 #' @rdname as_sptensor
 #' @aliases as_sptensor,data.frame-method
-#' @param valcol column to use for the tensor values. all other columns are treated as incides
+#' @param valcol column to use for the tensor values. all other columns are treated as indices
 #' @param dims dimensions of tensor. If not provided, the maximum value for each of the indices is used.
 #' @export
 setMethod("as_sptensor", "data.frame", function(x, valcol = NULL, dims = NULL) {

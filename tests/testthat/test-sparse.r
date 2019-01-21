@@ -55,6 +55,20 @@ test_that("sparse tensors show outputs", {
   expect_output(show(X))
 })
 
+test_that("sparse tensors show empty outputs", {
+  subs2 <- matrix(integer(0L), nrow = length(dims))
+  vals2 <- integer(0L)
+  X2 <- sptensor(subs2, vals2, dims)
+  expect_output(show(X2))
+})
+
+test_that("sparse tensors show truncated outputs", {
+  subs2 <- array_index(1:8, dims)
+  vals2 <- 1:8
+  X2 <- sptensor(subs2, vals2, dims)
+  expect_output(show(X2))
+})
+
 test_that("nzvals returns vals for sparse tensor", {
   expect_equal(nzvals(X), X@vals)
 })
@@ -71,3 +85,19 @@ test_that("nzsubs returns non-zero subscripts for dense tensor", {
   expect_equal(allsubs(X), array_index(seq_along(X), dims))
 })
 
+test_that("sparse tensor is initialized with a list of NULL dimnames", {
+  actual <- dimnames(X)
+  expected <- vector("list", length(dims))
+  expect_identical(actual, expected)
+})
+
+test_that("setting dimnames to NULL will throw warning and convert to list of NULLs", {
+  expect_warning(dimnames(X) <- NULL)
+  expect_equal(dimnames(X), list(NULL, NULL, NULL))
+})
+
+test_that("dimnames cannot be set to arbitrary values", {
+  expect_error(dimnames(X) <- 3)
+  expect_error(dimnames(X) <- list(NULL, NULL))
+  expect_error(dimnames(X) <- list(LETTERS[1:10], LETTERS[1:10], month.abb[1:10]))
+})
